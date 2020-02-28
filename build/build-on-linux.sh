@@ -120,5 +120,5 @@ docker run --name builder --rm \
     -v /usr/local/go:/opt/go \
     -v ${ANDROID_HOME}:/opt/android-sdk \
     -v "${root_dir}"/AndroidLibV2rayLite:${GO_PATH_SRC_DIR_IN_DOCKER} \
-    yuanmomo/android-v2ray-build:1.0.0 /bin/bash -vx ${GO_PATH_SRC_DIR_IN_DOCKER}/build-in-docker.sh ${download_geo_data} ${update_go_dep}
+    jedivpn/android-v2ray-build:1.0.0 /bin/bash -vx ${GO_PATH_SRC_DIR_IN_DOCKER}/build-in-docker.sh ${download_geo_data} ${update_go_dep}
 
