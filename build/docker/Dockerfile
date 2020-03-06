@@ -58,6 +58,10 @@ RUN wget -q --output-document=android-ndk.zip https://dl.google.com/android/repo
 
 RUN bash /usr/local/go/src/AndroidLibV2rayLite/gen_assets.sh
 
+RUN cd /usr/local/go/src/AndroidLibV2rayLite/shippedBinarys && make shippedBinary
+
 WORKDIR /usr/local/go/src/AndroidLibV2rayLite
+RUN gomobile init && gomobile bind -v  -tags json .
+
 #WORKDIR /home/myapp
 #CMD ["/bin/bash","-vx","build-in-docker.sh","data","dep"]
