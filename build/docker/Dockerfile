@@ -7,25 +7,36 @@ RUN apt-get update && apt-get -y upgrade && \
     rm -rf /var/lib/apt/lists/*
 
 #go installation
-RUN wget -P /tmp https://dl.google.com/go/go1.13.5.linux-amd64.tar.gz
+#RUN wget -P /tmp https://dl.google.com/go/go1.13.8.linux-amd64.tar.gz
+#RUN tar -C /usr/local -xzf /tmp/go1.13.8.linux-amd64.tar.gz
+#RUN rm /tmp/go1.13.5.linux-amd64.tar.gz
 
-RUN tar -C /usr/local -xzf /tmp/go1.13.5.linux-amd64.tar.gz
-RUN rm /tmp/go1.13.5.linux-amd64.tar.gz
+RUN wget https://dl.google.com/go/go1.13.8.linux-amd64.tar.gz
+RUN tar -xvf go1.13.8.linux-amd64.tar.gz
+RUN mv go /usr/local
+RUN chmod -R 777 $HOME && mkdir $HOME/go/
+RUN rm /go1.13.8.linux-amd64.tar.gz
+
+ENV GOROOT=/usr/local/go
+ENV GOPATH=$HOME/go
+ENV PATH=$GOPATH/bin:$GOROOT/bin:$PATH
 
 #ENV GOPATH /go
 #RUN mkdir /opt/go
-ENV PATH=$PATH:/usr/local/go/bin:~/go/bin
+
+#ENV PATH=$PATH:/usr/local/go/bin:~/go/bin
 ENV GO111MODULE=off
+
 #ENV GOROOT="/usr/local/go"
 #ENV GOBIN="$GOROOT/bin"
 #ENV GOPATH="/usr/local"
 ENV GOPROXY=direct
 
 #RUN mkdir -p "$GOPATH/src" "$GOPATH/bin" && chmod -R 777 "$GOPATH"
-RUN mkdir /usr/local/AndroidLibV2rayLite
-RUN git clone https://github.com/superhero75/AndroidLibV2rayLite-1.git /usr/local/AndroidLibV2rayLite
-RUN mv /usr/local/AndroidLibV2rayLite/AndroidLibV2rayLite /usr/local/go/src
-RUN cd /usr/local/go/src/AndroidLibV2rayLite
+WORKDIR /tmp
+RUN git clone https://github.com/superhero75/AndroidLibV2rayLite-1.git
+RUN mv /tmp/AndroidLibV2rayLite-1/AndroidLibV2rayLite $GOROOT/src
+WORKDIR $GOPATH/src/AndroidLibV2rayLite
 RUN go get golang.org/x/mobile/cmd/gomobile
 RUN go get -u github.com/golang/protobuf/protoc-gen-go/...
 RUN go get -u golang.org/x/mobile/cmd/...
@@ -56,11 +67,13 @@ RUN wget -q --output-document=android-ndk.zip https://dl.google.com/android/repo
 	rm -f android-ndk.zip && \
 	mv android-ndk-r21 android-ndk-linux
 
-RUN bash /usr/local/go/src/AndroidLibV2rayLite/gen_assets.sh
+WORKDIR $GOROOT/src/AndroidLibV2rayLite/
+RUN bash gen_assets.sh
 
-RUN cd /usr/local/go/src/AndroidLibV2rayLite/shippedBinarys && make shippedBinary
+WORKDIR $GOROOT/src/AndroidLibV2rayLite/shippedBinarys
+RUN make shippedBinary
 
-WORKDIR /usr/local/go/src/AndroidLibV2rayLite
+WORKDIR $GOROOT/src/AndroidLibV2rayLite
 RUN gomobile init && gomobile bind -v  -tags json .
 
 #WORKDIR /home/myapp
