@@ -2,7 +2,7 @@ FROM ubuntu:18.04
 
 # update sys and install build java8 required
 RUN apt-get update && apt-get -y upgrade && \
-    apt-get -y install openjdk-8-jdk wget make git && \
+    apt-get -y install openjdk-8-jdk wget make git unzip && \
     apt-get autoremove && apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
@@ -36,6 +36,7 @@ ENV GOPROXY=direct
 WORKDIR /tmp
 RUN git clone https://github.com/superhero75/AndroidLibV2rayLite-1.git
 RUN mv /tmp/AndroidLibV2rayLite-1/AndroidLibV2rayLite $GOROOT/src
+RUN rm -rf /tmp/AndroidLibV2rayLite-1
 WORKDIR $GOPATH/src/AndroidLibV2rayLite
 RUN go get golang.org/x/mobile/cmd/gomobile
 RUN go get -u github.com/golang/protobuf/protoc-gen-go/...
@@ -52,9 +53,6 @@ ENV PATH ${PATH}:${ANDROID_HOME}/tools/bin:${ANDROID_HOME}/platform-tools:${PATH
 ENV ANDROID_NDK /opt/android-ndk-linux
 ENV ANDROID_NDK_HOME /opt/android-ndk-linux
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-	unzip \
-	wget
 RUN cd /opt/android-sdk-linux && \
 	wget -q --output-document=sdk-tools.zip https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip && \
 	unzip sdk-tools.zip && \
