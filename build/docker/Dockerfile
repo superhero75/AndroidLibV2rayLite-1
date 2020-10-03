@@ -11,11 +11,11 @@ RUN apt-get update && apt-get -y upgrade && \
 #RUN tar -C /usr/local -xzf /tmp/go1.13.8.linux-amd64.tar.gz
 #RUN rm /tmp/go1.13.5.linux-amd64.tar.gz
 
-RUN wget https://dl.google.com/go/go1.13.8.linux-amd64.tar.gz
-RUN tar -xvf go1.13.8.linux-amd64.tar.gz
+RUN wget https://dl.google.com/go/go1.15.2.linux-amd64.tar.gz
+RUN tar -xvf go1.15.2.linux-amd64.tar.gz
 RUN mv go /usr/local
 RUN chmod -R 777 $HOME && mkdir $HOME/go/
-RUN rm /go1.13.8.linux-amd64.tar.gz
+RUN rm /go1.15.2.linux-amd64.tar.gz
 
 ENV GOROOT=/usr/local/go
 ENV GOPATH=$HOME/go
