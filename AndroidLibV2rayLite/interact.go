@@ -11,7 +11,6 @@ import (
 	"AndroidLibV2rayLite/CoreI"
 	"AndroidLibV2rayLite/Process/Escort"
 	"AndroidLibV2rayLite/VPN"
-	"AndroidLibV2rayLite/shippedBinarys"
 	mobasset "golang.org/x/mobile/asset"
 
 	v2core "v2ray.com/core"
@@ -224,12 +223,6 @@ func NewV2RayPoint(s V2RayVPNServiceSupportsSet) *V2RayPoint {
 }
 
 func (v V2RayPoint) runTun2socks() error {
-	shipb := shippedBinarys.FirstRun{Status: v.status}
-	if err := shipb.CheckAndExport(); err != nil {
-		log.Println(err)
-		return err
-	}
-
 	v.escorter.EscortingUp()
 	go v.escorter.EscortRun(
 		v.status.GetApp("libtun2socks.so"),
